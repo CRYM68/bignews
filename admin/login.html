@@ -59,6 +59,7 @@
   </div><!-- /.modal -->
 
 </body>
+<script src="./libs/http.js"></script>
 <script>
   $(function () {
     // _登录判断
@@ -67,7 +68,7 @@
       let password = $('.input_pass').val();
       if (username === '' && password === '') return;
       $.ajax({
-        url: 'http://localhost:8080/api/v1/admin/user/login',
+        url: BigNew.user_login,
         type: 'post',
         data: {
           username: username,
