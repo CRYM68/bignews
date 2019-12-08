@@ -51,7 +51,7 @@
           <p>One fine body&hellip;</p>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+          <!-- <button type="button" class="btn btn-default" data-dismiss="modal">取消</button> -->
           <button type="button" class="btn btn-primary">确定</button>
         </div>
       </div><!-- /.modal-content -->
@@ -63,6 +63,33 @@
 <script>
   $(function () {
     // _登录判断
+    // 函数_失败成功都有模态框的
+    // function login() {
+    //   let username = $('.input_txt').val();
+    //   let password = $('.input_pass').val();
+    //   if (username === '' && password === '') return;
+    //   $.ajax({
+    //     url: BigNew.user_login,
+    //     type: 'post',
+    //     data: {
+    //       username: username,
+    //       password: password,
+    //     },
+    //     success: function (res) {
+    //       console.log(res);
+    //       $('.modal').modal('show');
+    //       $(".modal-body>p").text(res.msg);
+    //       $('.btn.btn-primary').on('click', function () {
+    //         if (res.code === 200) {
+    //           localStorage.setItem('token', res.token);
+    //           location.href = './index.html';
+    //         }
+    //       });
+    //       $('.modal').modal('hide');
+    //     }
+    //   });
+    // }
+    // 函数_登录成功没有模态框的
     function login() {
       let username = $('.input_txt').val();
       let password = $('.input_pass').val();
@@ -76,17 +103,16 @@
         },
         success: function (res) {
           console.log(res);
-          $('.modal').modal();
-          $(".modal-body>p").text(res.msg);
-          function modal() {
-            if (res.code === 200) {
-              localStorage.setItem('token', res.token);
-              location.href = './index.html';
-            };
-            $('.modal').modal('hide');
+          if (res.code === 200) {
+            localStorage.setItem('token', res.token);
+            location.href = './index.html';
+          } else {
+            $('.modal').modal('show');
+            $(".modal-body>p").text(res.msg);
+            $('.btn.btn-primary').on('click', function () {
+              $('.modal').modal('hide');
+            });
           }
-          $('.btn.btn-primary').on('click', modal);
-          // $('.btn.btn-primary').on('keydown', function () { if (e.keyCode === 13) modal() });
         }
       });
     }
