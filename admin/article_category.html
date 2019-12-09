@@ -43,7 +43,7 @@
                 <tfoot>
                     <tr>
                         <td colspan="3" class="text-center">
-                            <a href="javascript:void(0)" class="btn btn-success" id="xinzengfenlei" data-toggle="modal"
+                            <a href="javascript:void(0)" class="btn btn-success" id="xinzengfenlei"
                                 data-target="#myModal">新增分类</a>
                         </td>
                     </tr>
@@ -51,5 +51,155 @@
             </table>
         </div>
     </div>
+
+    <!-- modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="exampleModalLabel">New message</h4>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="recipient-name" class="control-label">标题:</label>
+                            <input type="text" class="form-control" id="recipient-name">
+                        </div>
+                        <div class="form-group">
+                            <label for="message-text" class="control-label">内容:</label>
+                            <textarea class="form-control" id="message-text"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="./libs/http.js"></script>
+<script type='text/html' id="templateList">
+    {{each data as value i}}
+     <tr>
+        <td>{{value.name}}</td>
+        <td>{{value.slug}}</td>
+        <td class="text-center">
+        <a href="javascript:void(0)" data-id={{value.id}} ,data-toggle="modal" class=" btn btn-info btn-xs">编辑</a>
+        <a href="javascript:void(0)" class="btn btn-danger btn-xs" data-id={{value.id}}>删除</a>
+        </td>
+    </tr>
+    {{/each}}
+    </script>
+<script>
+    $(function () {
+        // _初始化界面数据
+        // _多次使用封装为函数
+        function getData() {
+            $.get(
+                BigNew.category_list,
+                function (res) {
+                    console.log(res);
+                    if (res.code === 200) {
+                        let list = template('templateList', res);
+                        $('tbody').html(list);
+                    }
+                }
+            )
+        }
+        getData();
+
+        // _编辑按钮注册事件
+        var cateId;
+        var btnBype;
+        $('tbody').on('click', '.btn-info', function () {
+            btnBype = '文章编辑';
+            $('#myModal').modal();
+            $('#exampleModalLabel').text('文章编辑');
+            cateId = $(this).data('id');
+            $.get(
+                BigNew.category_search,
+                { id: cateId },
+                function (res) {
+                    console.log(res);
+                    if (res.code === 200) {
+                        $('#recipient-name').val(res.data[0].name);
+                        $('#message-text').val(res.data[0].slug);
+                    }
+                }
+            )
+        });
+
+        // _新增分类按钮注册事件，也可以在标签中新增自定义属性data-target=madal
+        $('#xinzengfenlei').on('click', function () {
+            btnBype = '新增文章';
+            $('form')[0].reset();
+            $('#myModal').modal();
+            $('#exampleModalLabel').text('新增文章');
+        });
+
+
+        // _模态框的确定按钮被点击
+        $('.btn-primary').on('click', function () {
+            console.log(111);
+
+            if (btnBype === '文章编辑') {
+                $.post(
+                    BigNew.category_edit,
+                    {
+                        id: cateId,
+                        name: $('#recipient-name').val(),
+                        slug: $('#message-text').val(),
+                    },
+                    function (res) {
+                        console.log(res);
+                        if (res.code === 200) {
+                            getData();
+                            $('#myModal').modal('hide');
+                        }
+                    }
+                )
+            } else if (btnBype === '新增文章') {
+                $.post(
+                    BigNew.category_add,
+                    {
+                        name: $('#recipient-name').val(),
+                        slug: $('#message-text').val(),
+                    },
+                    function (res) {
+                        console.log(res);
+                        if (res.code === 201) {
+                            getData();
+                            $('#myModal').modal('hide');
+                        }
+                    }
+                )
+            }
+        });
+
+        // _删除
+        $('tbody').on('click', '.btn-danger', function () {
+            let id = $(this).data('id');
+            let s = confirm('你确定要删除？？');
+            if (s) {
+                $.post(
+                    BigNew.category_delete,
+                    {
+                        id: id
+                    },
+                    function (res) {
+                        if (res.code == 204) {
+                            getData();
+                        }
+                    }
+                );
+            }
+        });
+    });
+
+</script>
 
 </html>

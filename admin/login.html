@@ -93,7 +93,7 @@
     function login() {
       let username = $('.input_txt').val();
       let password = $('.input_pass').val();
-      if (username === '' && password === '') return;
+      if (username === '' || password === '') return;
       $.ajax({
         url: BigNew.user_login,
         type: 'post',
@@ -129,7 +129,7 @@
       };
     });
 
-
+    //试试那只猫
 
   });
 </script>
