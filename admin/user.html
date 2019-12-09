@@ -69,5 +69,55 @@
         </div>
     </div>
 </body>
+<script src="./libs/http.js"></script>
+<script>
+    // _初始化界面
+    $(function () {
+        $.ajax({
+            url: BigNew.user_detail,
+            success: function (res) {
+                console.log(res);
+                if (res.code === 200) {
+                    for (let k in res.data) {
+                        $('.' + k).val(res.data[k]);
+                    }
+                    // $('#inputEmail1').val(res.data.username);
+                    // $('#inputEmail2').val(res.data.nickname);
+                    // $('#inputEmail3').val(res.data.email);
+                    // $('#inputEmail4').val(res.data.password);
+                    $('.user_pic').attr('src', res.data.userPic)
+                }
+            },
+        });
+
+        //_-新头像预览
+        $('#exampleInputFile').on('change', function (e) {
+            let file = this.files[0];
+            let url = URL.createObjectURL(file);//此方法可生成一个生命周期与本页面相同的url
+            $('.user_pic').attr('src', url);
+            parent.$('div.user_info>img,.user_center_link img').attr('src', url);
+        });
+        // _-昵称预览
+        $('.nickname').on('change', function () {
+            parent.$('div.user_info>span').html('欢迎&nbsp;&nbsp;' + $('.nickname').val());
+        })
+        console.log(new FormData($('#form')[0]));
+
+        // _提交编辑后表单信息
+        $('#form').on('submit', function (e) {
+            $.ajax({
+                url: BigNew.user_edit,
+                type: 'post',
+                data: new FormData(this),
+                contentType: false,
+                processData: false,
+                function(res) {
+                    console.log(res);
+                }
+            })
+        });
+    });//入口函数结尾
+
+</script>
 
 </html>
