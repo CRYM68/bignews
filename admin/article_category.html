@@ -83,7 +83,7 @@
 </body>
 <script src="./libs/http.js"></script>
 <script type='text/html' id="templateList">
-    {{each data as value i}}
+    {{each data value}}
      <tr>
         <td>{{value.name}}</td>
         <td>{{value.slug}}</td>
@@ -163,20 +163,24 @@
                     }
                 )
             } else if (btnBype === '新增文章') {
-                $.post(
-                    BigNew.category_add,
-                    {
-                        name: $('#recipient-name').val(),
-                        slug: $('#message-text').val(),
-                    },
-                    function (res) {
-                        console.log(res);
-                        if (res.code === 201) {
-                            getData();
-                            $('#myModal').modal('hide');
+                let title = $('#recipient-name').val().trim();
+                let content = $('#message-text').val().trim();
+                if (title === '' || content === '') {
+                    $.post(
+                        BigNew.category_add,
+                        {
+                            name: title,
+                            slug: content,
+                        },
+                        function (res) {
+                            console.log(res);
+                            if (res.code === 201) {
+                                getData();
+                                $('#myModal').modal('hide');
+                            }
                         }
-                    }
-                )
+                    )
+                }
             }
         });
 
@@ -198,7 +202,7 @@
                 );
             }
         });
-    });
+    });//入口函数结束
 
 </script>
 
