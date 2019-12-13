@@ -32,7 +32,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
+          <!-- <tr>
             <td>小周</td>
             <td>这是一条测试评论，欢迎光临</td>
             <td>《世界，你好》</td>
@@ -135,14 +135,14 @@
             <td>1970-04-24 11:22:29</td>
             <td>已批准</td>
             <td class="text-center">
-              <a href="javascript:editTr( 'rejected',11 );" class="btn btn-warning btn-xs">拒绝</a>
-              <a href="javascript:editTr( 'trashed',11 );" class="btn btn-danger btn-xs">删除</a>
+              <a href="javascript:void(0);;" class="btn btn-warning btn-xs">拒绝</a>
+              <a href="javascript:void(0);;" class="btn btn-danger btn-xs">删除</a>
             </td>
-          </tr>
+          </tr> -->
         </tbody>
       </table>
       <div class="row text-center">
-        <ul class="pagination pagination-sm">
+        <!-- <ul class="pagination pagination-sm">
           <li class="page-item first disabled"><a href="#" class="page-link">首页</a></li>
           <li class="page-item prev disabled"><a href="#" class="page-link">上一页</a></li>
           <li class="page-item active"><a href="#" class="page-link">1</a></li>
@@ -155,11 +155,122 @@
           <li class="page-item next"><a href="#" class="page-link">下一页</a></li>
           <li class="page-item last"><a href="#" class="page-link">尾页</a></li>
         </ul>
-        <ul id="pagination" class="pagination-sm"></ul>
+        <ul id="pagination" class="pagination-sm"></ul> -->
+        <!-- 分页插件加载 -->
+        <ul id="pagination" class="pagination"></ul>
       </div>
 
     </div>
   </div>
 </body>
+<!-- 分页插件 -->
+<script src="./libs/jquery.twbsPagination.js"></script>
+<!-- 模板字符串 -->
+<script type="text/html" id="item">
+{{each data v}}
+<tr>
+    <td>{{v.author}}</td>
+    <td>{{v.content}}</td>
+    <td>{{v.aid}}</td>
+    <td>{{v.date}}</td>
+    <td>{{v.state}}</td>
+    <td class="text-center">
+      {{if v.state==='已通过'}}
+      <a href="javascript:void(0);;" class="btn btn-warning btn-xs" data-id={{v.id}}>拒绝</a>
+      <a href="javascript:void(0);;" class="btn btn-danger btn-xs" data-id={{v.id}}>删除</a>
+      {{/if}}
+      {{if v.state==='待审核'}}
+      <a href="javascript:void(0);;" class="btn btn-info btn-xs" data-id={{v.id}}>批准</a>
+      <a href="javascript:void(0);;" class="btn btn-warning btn-xs" data-id={{v.id}}>拒绝</a>
+      {{/if}}
+      {{if v.state==='已拒绝'}}
+      <a href="javascript:void(0);;" class="btn btn-info btn-xs" data-id={{v.id}}>批准</a>
+      <a href="javascript:void(0);;" class="btn btn-danger btn-xs" data-id={{v.id}}>删除</a>
+      {{/if}}
+    </td>
+  </tr>
+{{/each}}
+</script>
+
+<!-- 请求地址 -->
+<script src="./libs/http.js"></script>
+<script>
+  $(function () {
+    // ——获取页面数据并渲染
+    function getData(page, fn) {
+      $.get(
+        BigNew.comment_list,
+        { perpage: 10, page: page },
+        function (res) {
+          console.log(res);
+          if (res.code === 200) {
+            let html = template('item', res.data);
+            $('tbody').html(html);
+            if (fn !== undefined) fn(res);
+            if (res.data.data === 0 && mypage === 1) {
+              $('#pagination').hide();
+              $('tbody').text('暂时没有任何评论');
+            } else $('#pagination').show();
+          }
+        }
+      )
+    };
+
+    // _初始化界面及数据
+    getData(1, function (res) {
+      $('#pagination').twbsPagination({
+        totalPages: res.data.totalPage,
+        visiblePages: 8,
+        first: '首页',
+        last: '尾页',
+        prev: '上一页',
+        next: '下一页',
+        onPageClick: function (event, page) {
+          getData(page);
+          mypage = page;
+        }
+      })
+    });
+
+    // _批准
+    var mypage;//存储当前页
+    $('tbody').on('click', '.btn-info', function () {
+      $.post(
+        BigNew.comment_pass,
+        { id: this.dataset.id },
+        function (res) {
+          console.log(res);
+          if (res.code === 200) getData(page);
+        }
+      )
+    })
+
+    // _拒绝
+    $('tbody').on('click', '.btn-warning', function () {
+      $.post(
+        BigNew.comment_reject,
+        { id: this.dataset.id },
+        function (res) {
+          console.log(res);
+          if (res.code === 200) getData(page);
+        }
+      )
+    })
+
+    // _删除
+    $('tbody').on('click', '.btn-danger', function () {
+      $.post(
+        BigNew.comment_delete,
+        { id: this.dataset.id },
+        function (res) {
+          console.log(res);
+          if (res.code === 200) getData(page, function () {
+            if (res.data.data === 0) getData(mypage - 1);
+          });
+        }
+      )
+    });
+  });
+</script>
 
 </html>
