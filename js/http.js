@@ -1,7 +1,7 @@
 (function() {
   var base = "http://localhost:8080/api/v1";
   var BigNew = {
-    article_seach: base + "/index/search", //文章搜索
+    article_search: base + "/index/search", //文章搜索
     article_type: base + "/index/category", //文章类型
     hotPic: base + "/index/hotpic", //热点图
     article_hot: base + "/index/rank", //文章热门排行

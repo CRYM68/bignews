@@ -59,11 +59,11 @@
     <div class="main_con clearfix">
         <div class="left_con setfr">
 
-            <div class="list_title">
+            <!-- <div class="list_title">
                 <h3>科 技</h3>
-            </div>
+            </div> -->
 
-            <div class="common_news_list">
+            <!-- <div class="common_news_list">
                 <a href="#" class="list_pic"><img src="images/pic09.jpg" alt=""></a>
                 <h4><a href="#">亚马逊金融试水中国？背后却是和华尔街的“金融战争” </a></h4>
                 <p>亚马逊抛弃了中国的买家们，却难以割舍庞大的卖家市场，有消息指出亚马逊中国将针对中国庞大的卖家群体推出一项贷款推荐计划。在连续对印度、墨西哥等新兴市场大力推广线上支付服务后，亚马逊金融试水进军中国市场的信号终于被放出。
@@ -133,39 +133,25 @@
                         )&nbsp;&nbsp;&nbsp;<i class="fa fa-commenting"></i>&nbsp;评论( 10 )</span>
                     <b>发布于 2018-08-30 12:18:58</b>
                 </div>
-            </div>
-
-            <div id="pagination" class="page"></div>
-            <script>
-                $(function () {
-                    $("#pagination").pagination({
-                        currentPage: 2,
-                        totalPage: 8,
-                        callback: function (current) {
-                            alert('ok!');
-                        }
-                    });
-                });
-            </script>
-
+            </div> -->
         </div>
         <div class="right_con setfl">
             <div class="common_wrap">
                 <h3><i class="fa fa-bar-chart"></i> 一周热门排行</h3>
-                <ul class="content_list">
-                    <li><span class="first">1</span><a href="#">神奇的水滴摄影，泡泡中的世界泡泡中的世界</a></li>
+                <ul class="content_list article_hot">
+                    <!-- <li><span class="first">1</span><a href="#">神奇的水滴摄影，泡泡中的世界泡泡中的世界</a></li>
                     <li><span class="second">2</span><a href="#">神奇的水滴摄影，泡泡中的世界</a></li>
                     <li><span class="third">3</span><a href="#">神奇的水滴摄影，泡泡中的世界</a></li>
                     <li><span>4</span><a href="#">神奇的水滴摄影，泡泡中的世界</a></li>
                     <li><span>5</span><a href="#">神奇的水滴摄影，泡泡中的世界</a></li>
                     <li><span>6</span><a href="#">神奇的水滴摄影，泡泡中的世界</a></li>
-                    <li><span>7</span><a href="#">神奇的水滴摄影，泡泡中的世界</a></li>
+                    <li><span>7</span><a href="#">神奇的水滴摄影，泡泡中的世界</a></li> -->
                 </ul>
             </div>
             <div class="common_wrap">
                 <h3><i class="fa fa-commenting-o"></i> 最新评论</h3>
                 <ul class="content_list comment_list">
-                    <li>
+                    <!-- <li>
                         <span>山</span>
                         <b><em>山治</em> 9个月前(08-14)说:</b>
                         <strong>挺会玩的</strong>
@@ -194,19 +180,19 @@
                         <span>乔</span>
                         <b><em>乔峰</em> 9个月前(08-14)说:</b>
                         <strong>挺会玩的</strong>
-                    </li>
+                    </li> -->
                 </ul>
             </div>
             <div class="common_wrap">
                 <h3><i class="fa fa-bullseye"></i> 焦点关注</h3>
                 <ul class="content_list guanzhu_list">
-                    <li><a href="#">神奇的水滴摄影，泡泡中的世界泡泡中的世界</a></li>
+                    <!-- <li><a href="#">神奇的水滴摄影，泡泡中的世界泡泡中的世界</a></li>
                     <li><a href="#">神奇的水滴摄影，泡泡中的世界</a></li>
                     <li><a href="#">神奇的水滴摄影，泡泡中的世界</a></li>
                     <li><a href="#">神奇的水滴摄影，泡泡中的世界</a></li>
                     <li><a href="#">神奇的水滴摄影，泡泡中的世界</a></li>
                     <li><a href="#">神奇的水滴摄影，泡泡中的世界</a></li>
-                    <li><a href="#">神奇的水滴摄影，泡泡中的世界</a></li>
+                    <li><a href="#">神奇的水滴摄影，泡泡中的世界</a></li> -->
                 </ul>
             </div>
         </div>
@@ -225,8 +211,164 @@
         <p>CopyRight © 2019 深圳大事件信息技术股份有限公司 All Rights Reserved</p>
         <p>电话：0755-****888 粤ICP备*******8号</p>
     </div>
+    </div>
+    <!-- 请求地址 -->
+    <script src="./js/http.js"></script>
     <!-- 导包template -->
     <script src="./js/template-web.js"></script>
+
+    <!-- 分类导航栏模板 -->
+    <script type="text/html" id="category">
+     {{each data}}
+      <li><a href="./list.html?id={{$value.id}}">{{$value.name}}</a></li>
+     {{/each}}
+    </script>
+
+    <!-- 文章排行模板 -->
+    <script type="text/html" id='article_hot'>
+        {{each data}}
+        <li>
+        {{if $index===0}}
+        <span class="first">
+        {{else if $index===1}}
+        <span class="second">
+        {{else if $index===2}}
+        <span class="third">
+        {{else}}
+        <span>
+        {{/if}}
+    {{$index+1}}</span><a href="#" data-id={{$value.id}}>{{$value.title}}</a></li>
+    {{/each}}
+    </script>
+
+    <!-- 最新评论模板 -->
+    <script type="text/html" id="new_comment">
+    {{each data}}
+    <li>
+        <span>{{$value.first}}</span>
+        <b><em>{{$value.author}}</em> {{$value.date}})说:</b>
+        <strong>{{$value.intro}}</strong>
+    </li>
+    {{/each}}
+    </script>
+
+    <!-- 焦点关注模板 -->
+    <script type="text/html" id='attention'>
+        {{each data}}
+        <li><a href="#">{{$value.intro}}</a></li>
+        {{/each}}
+    </script>
+    <!-- 资讯模板 -->
+    <script type="text/html" id='news'>
+
+    <div class="list_title">
+        <h3>{{data[0].category}}</h3>
+    </div>
+    {{each data}}
+    <div class="common_news_list">
+           <a href="#" class="list_pic"><img src="{{$value.cover}}" alt=""></a>
+           <h4><a href="#">{{$value.title}}</a></h4>
+           <p>{{$value.content}}
+           </p>
+           <div class="new_info">
+               <span>标签：{{$value.category}}&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<i class="fa fa-eye"></i>&nbsp;阅读( {{$value.read}}
+                   )&nbsp;&nbsp;&nbsp;<i class="fa fa-commenting"></i>&nbsp;评论(未知} )</span>
+               <b>发布于 {{$value.date}}</b>
+           </div>
+       </div>
+    {{/each}}
+    <div id="pagination" class="page"></div>
+    </script>
 </body>
+<script>
+    $(function () {
+        // _类型id
+        let id = location.search.substr(4, 1);
+        console.log(id);
+
+        // _文章类型导航
+        $.get(
+            BigNew.article_type,
+            function (res) {
+                // console.log(res);
+                if (res.code === 200) {
+                    let html = template('category', res);
+                    $('.level_two,.left_menu').html(html);
+                }
+            }
+        )
+
+        // _文章热门排行
+        $.get(
+            BigNew.article_hot,
+            function (res) {
+                // console.log(res);
+                if (res.code === 200) {
+                    let html = template('article_hot', res);
+                    $('.article_hot').html(html);
+                }
+            }
+        )
+
+        // _最新评论
+        $.get(
+            BigNew.new_comment,
+            function (res) {
+                // console.log(res);
+                if (res.code === 200) {
+                    res.data.forEach((e, i) => {
+                        let first = e.author.substr(0, 1);//名字第一个字
+                        e.first = first;
+                    });
+                    let html = template('new_comment', res);
+                    $('.comment_list').html(html);
+                }
+            }
+        )
+
+        // _焦点关注
+        $.get(
+            BigNew.attention,
+            function (res) {
+                // console.log(res);
+                if (res.code === 200) {
+                    let html = template('attention', res);
+                    $('.guanzhu_list').html(html);
+                }
+            }
+        )
+
+        // _资讯
+        function getData(page, fn) {
+            $.get(
+                BigNew.article_search,
+                { type: id, page: page },
+                function (res) {
+                    console.log(res);
+                    if (res.code === 200) {
+                        let html = template('news', res.data)
+                        $('.left_con.setfr').html(html);
+                        // let obj = {
+                        //     currentPage: page,
+                        //     totalPage: res.data.totalCount,
+                        //     callback: function (current) { getData(current) },
+                        // }
+                        let obj = {
+                            currentPage: page,
+                            totalPage: res.data.totalCount,
+                            callback: function (current) { getData(current, jz) },
+                        }
+                        if (fn !== undefined) fn(obj);
+                    }
+                }
+            )
+        }
+        function jz(obj) {
+            $("#pagination").pagination(obj);
+        };
+        getData(1, jz)
+    });
+
+</script>
 
 </html>
